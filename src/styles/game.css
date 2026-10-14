@@ -1,0 +1,298 @@
+:root {
+  --bg: #050505;
+  --ink: #e9e4d6;
+  --ink-dim: #9b968a;
+  --phosphor: #8dffb0;
+  --phosphor-dim: #3f9b62;
+  --crt-bg: #04140a;
+  --danger: #ff4a3a;
+  --font-pixel: 'VT323', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  --font-dialog: Georgia, 'Times New Roman', serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-pixel);
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 0.3em;
+  border: 1px solid currentColor;
+  border-bottom-width: 2px;
+  font-family: inherit;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* ---------- Escena ---------- */
+
+.game {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.game-canvas canvas {
+  /* El canvas se renderiza a baja resolución; esto conserva los píxeles duros. */
+  image-rendering: pixelated;
+}
+
+/* Scanlines y viñeta sobre toda la pantalla, muy sutiles */
+.screen-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.55) 100%),
+    repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.16) 0 1px, transparent 1px 3px);
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.controls-hint {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+  text-shadow: 0 1px 0 #000;
+}
+
+.controls-hint kbd {
+  margin-right: 4px;
+}
+
+.prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  transform: translateX(-50%);
+  padding: 4px 14px;
+  background: rgb(0 0 0 / 0.65);
+  font-size: 24px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  animation: prompt-in 180ms steps(3) both;
+}
+
+@keyframes prompt-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Diálogo de la puerta ---------- */
+
+.dialog-box {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(640px, calc(100% - 32px));
+  padding: 20px 28px 16px;
+  border: 2px solid #6b665a;
+  outline: 2px solid #000;
+  background: rgb(4 4 4 / 0.88);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  pointer-events: auto;
+  cursor: pointer;
+  animation: prompt-in 200ms steps(4) both;
+}
+
+.dialog-box:focus-visible {
+  outline-color: var(--ink-dim);
+}
+
+.dialog-box__text {
+  font-family: var(--font-dialog);
+  font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.35;
+}
+
+.dialog-box__hint {
+  align-self: flex-end;
+  margin-top: 6px;
+  font-size: 18px;
+  color: var(--ink-dim);
+  animation: blink 1.1s steps(1) infinite;
+}
+
+/* ---------- Monitor CRT ---------- */
+
+.crt-backdrop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 0.45);
+  pointer-events: auto;
+}
+
+.crt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(620px, 100%);
+  padding: 22px;
+  border-radius: 18px;
+  background: #8c8672;
+  box-shadow:
+    inset 0 0 0 3px #a29c86,
+    inset 0 -8px 0 #6d6858,
+    0 24px 60px rgb(0 0 0 / 0.7);
+  animation: crt-on 380ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+@keyframes crt-on {
+  0% {
+    transform: scale(1, 0.02);
+    filter: brightness(3);
+  }
+  60% {
+    transform: scale(1, 1.02);
+  }
+  100% {
+    transform: none;
+    filter: none;
+  }
+}
+
+.crt__screen {
+  position: relative;
+  min-height: 300px;
+  padding: 28px 32px;
+  overflow: hidden;
+  border-radius: 14px / 18px;
+  background: radial-gradient(ellipse at center, #072a14 0%, var(--crt-bg) 75%);
+  color: var(--phosphor);
+  font-size: clamp(20px, 3vw, 26px);
+  line-height: 1.25;
+  text-shadow:
+    0 0 4px rgb(141 255 176 / 0.8),
+    0 0 12px rgb(141 255 176 / 0.35);
+  box-shadow: inset 0 0 40px rgb(0 0 0 / 0.9);
+  animation: flicker 4s infinite;
+}
+
+/* Scanlines del CRT */
+.crt__screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.35) 0 2px, transparent 2px 4px);
+}
+
+.crt__line {
+  margin: 0;
+  animation: line-in 1ms steps(1) both;
+}
+
+.crt__title {
+  font-size: 1.25em;
+  font-weight: normal;
+  letter-spacing: 0.06em;
+}
+
+.crt__label {
+  color: var(--phosphor-dim);
+}
+
+.crt__cursor span {
+  animation: blink 0.9s steps(1) infinite;
+}
+
+@keyframes line-in {
+  from {
+    visibility: hidden;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  47% {
+    opacity: 0.96;
+  }
+  48% {
+    opacity: 0.86;
+  }
+  49% {
+    opacity: 1;
+  }
+}
+
+.crt__close {
+  align-self: flex-end;
+  margin-top: 16px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 4px;
+  background: #3b382f;
+  color: var(--ink);
+  font: inherit;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: inset 0 -3px 0 #24221c;
+}
+
+.crt__close:hover {
+  background: #4a463b;
+}
+
+.crt__close:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt,
+  .crt__screen,
+  .crt__line,
+  .dialog-box,
+  .dialog-box__hint,
+  .crt__cursor span,
+  .prompt {
+    animation: none;
+  }
+}
