@@ -156,12 +156,12 @@ export function Character() {
 
 const COLORS = {
   skin: '#c69a7c',
-  hair: '#151010',
-  hat: '#17181b',
+  hair: '#1c1512',
+  hat: '#1d1e22',
   hatBand: '#0b0b0c',
   glasses: '#0a0a0a',
-  shirt: '#1a1b1f',
-  shirtSeam: '#26272c',
+  shirt: '#1f2025',
+  shirtSeam: '#2c2d33',
   pants: '#5a5c61',
   shoes: '#121212',
 } as const
