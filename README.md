@@ -20,7 +20,7 @@ npm run build     # verifica TypeScript y genera dist/
 npm run preview   # sirve el build de producción
 ```
 
-Cada push a `main` se compila y se publica en GitHub Pages con el workflow de `.github/workflows/deploy.yml`.
+Cada push a `main` se compila con el workflow de `.github/workflows/deploy.yml` y el resultado se publica en la rama `gh-pages`. Para verlo en línea, activa GitHub Pages una sola vez en **Settings → Pages → Build and deployment → Deploy from a branch → `gh-pages` / `(root)`**. Quedará en `https://robertoboz.github.io/portafolio_interactivo/`.
 
 ## Controles
 
