@@ -122,12 +122,137 @@ export function mottoTexture(): THREE.CanvasTexture {
   return createPaintedTexture(128, 7, (ctx) => {
     ctx.fillStyle = '#0d0e10'
     ctx.fillRect(0, 0, 128, 128)
-    ctx.fillStyle = '#6d6f75'
-    ctx.font = '22px monospace'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    ctx.fillText('Build', 64, 34)
-    ctx.fillText('Ship', 64, 64)
-    ctx.fillText('Improve', 64, 94)
+    ctx.fillStyle = '#c9b27a'
+    ctx.font = '11px monospace'
+    ctx.fillText('ROBERTO BOLAÑOS', 64, 14)
+    ctx.fillStyle = '#7d8088'
+    ctx.font = '8px monospace'
+    ctx.fillText('DEVELOPER LOG', 64, 26)
+    ctx.fillStyle = '#c9b27a'
+    ctx.fillRect(34, 33, 60, 1)
+    ctx.fillStyle = '#6d6f75'
+    ctx.font = '20px monospace'
+    ctx.fillText('Build', 64, 54)
+    ctx.fillText('Ship', 64, 80)
+    ctx.fillText('Improve', 64, 106)
+  })
+}
+
+/** Frente de gabinete de servidores con hileras de LEDs. */
+export function rackTexture(seed: number): THREE.CanvasTexture {
+  return createPaintedTexture(32, seed, (ctx, random) => {
+    ctx.fillStyle = '#121418'
+    ctx.fillRect(0, 0, 32, 32)
+    for (let y = 1; y < 32; y += 4) {
+      ctx.fillStyle = '#1d2026'
+      ctx.fillRect(1, y, 30, 3)
+      for (let x = 3; x < 30; x += 3) {
+        const r = random()
+        ctx.fillStyle = r > 0.8 ? '#35ff7a' : r > 0.65 ? '#3a8fff' : r > 0.6 ? '#ffb020' : '#2a2e36'
+        ctx.fillRect(x, y + 1, 1, 1)
+      }
+    }
+  })
+}
+
+/** Pizarrón blanco con un diagrama a mano. */
+export function whiteboardTexture(kind: 'arquitectura' | 'equipo', seed: number): THREE.CanvasTexture {
+  return createPaintedTexture(64, seed, (ctx, random) => {
+    ctx.fillStyle = '#d8dad6'
+    ctx.fillRect(0, 0, 64, 64)
+    speckle(ctx, random, 64, 60, '#c9cbc6')
+    ctx.strokeStyle = kind === 'arquitectura' ? '#1f4fa8' : '#2b6b3a'
+    ctx.lineWidth = 1
+    if (kind === 'arquitectura') {
+      // UI → BLoC → Repositorio → API / BD local
+      ;[
+        [6, 6, 22, 10],
+        [6, 26, 22, 10],
+        [6, 46, 22, 10],
+        [38, 40, 20, 8],
+        [38, 52, 20, 8],
+      ].forEach(([x = 0, y = 0, w = 0, h = 0]) => ctx.strokeRect(x + 0.5, y + 0.5, w, h))
+      ctx.beginPath()
+      ctx.moveTo(17, 16)
+      ctx.lineTo(17, 26)
+      ctx.moveTo(17, 36)
+      ctx.lineTo(17, 46)
+      ctx.moveTo(28, 50)
+      ctx.lineTo(38, 44)
+      ctx.moveTo(28, 52)
+      ctx.lineTo(38, 56)
+      ctx.stroke()
+      ctx.fillStyle = '#b3261e'
+      ctx.font = '6px monospace'
+      ctx.fillText('ADR', 40, 12)
+      ctx.fillText('BLoC', 34, 30)
+    } else {
+      ctx.strokeRect(24.5, 6.5, 16, 10)
+      ;[6, 22, 38, 54].forEach((x) => {
+        ctx.strokeRect(x - 4.5, 40.5, 10, 8)
+        ctx.beginPath()
+        ctx.moveTo(32, 17)
+        ctx.lineTo(x + 1, 40)
+        ctx.stroke()
+      })
+      ctx.fillStyle = '#b3261e'
+      ctx.fillRect(6, 56, 50, 1)
+    }
+  })
+}
+
+/** Lámina proyectada en la sala de juntas. */
+export function slideTexture(): THREE.CanvasTexture {
+  return createPaintedTexture(64, 81, (ctx) => {
+    ctx.fillStyle = '#e8e4d8'
+    ctx.fillRect(0, 0, 64, 40)
+    ctx.fillStyle = '#20262e'
+    ctx.font = '7px monospace'
+    ctx.fillText('EXPERIENCIA', 4, 10)
+    ctx.fillStyle = '#3a8fd1'
+    ;[16, 22, 28, 34].forEach((y, i) => ctx.fillRect(4, y, 18 + i * 9, 3))
+    ctx.fillStyle = '#05070a'
+    ctx.fillRect(0, 40, 64, 24)
+  })
+}
+
+/** Tablero de corcho con notas fijadas. */
+export function corkTexture(seed: number): THREE.CanvasTexture {
+  return createPaintedTexture(32, seed, (ctx, random) => {
+    ctx.fillStyle = '#8a6a43'
+    ctx.fillRect(0, 0, 32, 32)
+    speckle(ctx, random, 32, 140, '#7a5c38')
+    const colors = ['#e8e2c8', '#f2d06b', '#9ccbe8', '#e89c9c']
+    for (let i = 0; i < 7; i++) {
+      ctx.fillStyle = colors[i % colors.length] ?? '#e8e2c8'
+      const x = 2 + Math.floor(random() * 22)
+      const y = 2 + Math.floor(random() * 22)
+      ctx.fillRect(x, y, 6 + Math.floor(random() * 3), 6)
+      ctx.fillStyle = '#b3261e'
+      ctx.fillRect(x + 3, y, 1, 1)
+    }
+  })
+}
+
+/** Cartel original para las paredes. */
+export function posterTexture(lines: string[], background: string, color: string): THREE.CanvasTexture {
+  return createTextTexture(lines, { width: 64, height: 80, color, background, fontSize: 9 })
+}
+
+/** Directorio de la planta: lista numerada de cuartos. */
+export function directoryTexture(rooms: { number: number; name: string; open: boolean }[]): THREE.CanvasTexture {
+  return createPaintedTexture(64, 99, (ctx) => {
+    ctx.fillStyle = '#101317'
+    ctx.fillRect(0, 0, 64, 64)
+    ctx.fillStyle = '#c9b27a'
+    ctx.font = '6px monospace'
+    ctx.textBaseline = 'top'
+    ctx.fillText('DIRECTORIO', 3, 2)
+    rooms.forEach((room, i) => {
+      ctx.fillStyle = room.open ? '#d9d4c7' : '#5d6573'
+      ctx.fillText(`${String(room.number).padStart(2, ' ')} ${room.name.toUpperCase().slice(0, 13)}`, 2, 10 + i * 5)
+    })
   })
 }

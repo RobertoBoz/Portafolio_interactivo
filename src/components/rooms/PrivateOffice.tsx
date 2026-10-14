@@ -24,8 +24,8 @@ export function PrivateOffice() {
       </mesh>
 
       <Desk position={[deskX, 0, deskZ]} width={OFFICE_LAYOUT.desk.width} depth={OFFICE_LAYOUT.desk.depth} />
-      <Monitor screen={textures.screen} position={[OFFICE_LAYOUT.computer[0], 0.76, OFFICE_LAYOUT.computer[1]]} />
-      <Keyboard position={[OFFICE_LAYOUT.computer[0], 0.76, OFFICE_LAYOUT.computer[1] + 0.25]} />
+      <Monitor screen={textures.screen} position={[OFFICE_LAYOUT.computer[0], 0.76, OFFICE_LAYOUT.computer[1] + 0.18]} />
+      <Keyboard position={[OFFICE_LAYOUT.computer[0], 0.76, OFFICE_LAYOUT.computer[1] + 0.42]} />
       <Box size={[0.3, 0.05, 0.22]} position={[deskX + 0.65, 0.785, deskZ]} color="#c9c2b0" />
       <OfficeChair position={[deskX + 0.2, 0, deskZ + 0.62]} rotationY={Math.PI + 0.25} />
 

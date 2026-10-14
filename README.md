@@ -1,6 +1,6 @@
 # Portafolio PS1 — Oficina de desarrollo
 
-Portafolio interactivo de Roberto Bolaños inspirado en los survival horror de PlayStation 1. Recorres de noche la planta baja de una oficina de desarrollo con cámaras fijas y controles tipo tanque. En cada cuarto hay una sección del portafolio: proyectos, contacto, sobre mí y CV.
+Portafolio interactivo de Roberto Bolaños inspirado en los survival horror de PlayStation 1. Recorres de noche la planta baja de una oficina de desarrollo, en primera persona o con cámaras fijas clásicas. Cada cuarto tiene una parte del portafolio: perfil, tecnologías, proyectos, arquitectura, experiencia, infraestructura y contacto.
 
 ![Plano de la planta baja](docs/plano-planta-baja.png)
 
@@ -14,100 +14,104 @@ O desde una terminal:
 
 ```bash
 npm install
-npm run dev
-```
-
-Abre la URL que muestra la terminal (por defecto `http://localhost:5173`).
-
-```bash
+npm run dev       # http://localhost:5173
 npm run build     # verifica TypeScript y genera dist/
 npm run preview   # sirve el build de producción
 ```
 
-Cada push a `main` se compila con `.github/workflows/deploy.yml` y el resultado se publica en la rama `gh-pages`. Para verlo en línea, activa GitHub Pages una sola vez en **Settings → Pages → Build and deployment → Deploy from a branch → `gh-pages` / `(root)`**. Quedará en `https://robertoboz.github.io/Portafolio_interactivo/`.
+Cada push a `main` se compila con `.github/workflows/deploy.yml` y se publica en la rama `gh-pages`. Para verlo en línea, activa una vez **Settings → Pages → Deploy from a branch → `gh-pages` / `(root)`**: quedará en `https://robertoboz.github.io/Portafolio_interactivo/`.
 
 ### Parámetros de URL
 
-- `?sala=desarrollo`: empieza en un cuarto construido (`lobby`, `recepcion`, `desarrollo`, `oficina`). Sirve para compartir un enlace directo a una sección.
-- `?debug`: expone `window.__portafolio` (store y posición del personaje) para pruebas automatizadas.
+- `?sala=desarrollo`: empieza en un cuarto (`lobby`, `recepcion`, `oficina`, `desarrollo`, `juntas`, `comedor`, `servidores`, `almacen`, `diseno`).
+- `?debug`: expone `window.__portafolio` (store y posición del jugador) para pruebas automatizadas.
 
 ## Controles
 
-| Tecla | Acción |
-| --- | --- |
-| `W` / `↑` | Avanzar |
-| `S` / `↓` | Retroceder |
-| `A` / `←` | Girar a la izquierda |
-| `D` / `→` | Girar a la derecha |
-| `E` | Interactuar / continuar / cerrar |
-| `M` | Abrir o cerrar el plano |
-| `Esc` | Cerrar la interfaz abierta |
+| Tecla | Primera persona | Cámara clásica |
+| --- | --- | --- |
+| `W` / `S` | Avanzar / retroceder | Avanzar / retroceder |
+| `A` / `D` | Desplazarse de lado | Girar |
+| Ratón | Mirar alrededor | — |
+| `←` / `→` | Girar sin ratón | Girar |
+| `E` | Interactuar, abrir puertas, cerrar ventanas | igual |
+| `M` | Plano de la planta | igual |
+| `I` | Índice del portafolio (todo el contenido en texto) | igual |
+| `Esc` | Soltar el ratón y pausar | Pausar |
 
-## Qué hay en cada cuarto
+Desde la pausa se puede continuar, abrir el plano o el índice, **volver al lobby** y cambiar los ajustes.
 
-| # | Cuarto | Contenido | Estado |
-| --- | --- | --- | --- |
-| 1 | Lobby principal | Terminal con el *Developer Log* y el muro "Build · Ship · Improve" | ✅ |
-| 2 | Recepción | Contacto (correo, GitHub, LinkedIn, portafolio clásico) y la tarjeta de acceso | ✅ |
-| 3 | Oficina privada | Sobre mí, experiencia y expediente con CV descargable. Se abre con la tarjeta | ✅ |
-| 4 | Desarrollo | Un monitor por proyecto: iTeamApp, Kontrolia, GtrackApp, app logística, comunicación interna y plataforma de cursos | ✅ |
-| 5 | Sala de juntas | Liderazgo y prácticas de ingeniería | 🔒 |
-| 6 | Comedor / Descanso | Lado personal | 🔒 |
-| 7 | Sala de servidores | Stack y CI/CD | 🔒 |
-| 8 | Baños | Easter egg | 🔒 |
-| 9 | Almacén | Componentes reutilizables y automatización | 🔒 |
-| 10 | Diseño UX/UI | Identidad visual e ilustración | 🔒 |
-| 11 | Recursos humanos | Educación e idiomas | 🔒 |
+## Cuartos
 
-Los textos están en `src/content/portfolio.ts` y usan las descripciones ajustadas a la confidencialidad de la empresa.
+| # | Cuarto | Contenido |
+| --- | --- | --- |
+| 1 | Lobby principal | Tablero con el nombre, terminal con el *Developer Log*, directorio (abre el plano) y entrada |
+| 2 | Recepción | Bienvenida, tarjetas de presentación (contacto) y la **tarjeta de acceso** |
+| 3 | Oficina privada | Perfil, trayectoria y expediente con **CV descargable**. Requiere la tarjeta |
+| 4 | Desarrollo | Tecnologías: un escritorio por categoría del stack |
+| 5 | Sala de juntas | Experiencia (proyector) y liderazgo y equipo (pizarrón) |
+| 6 | Comedor / Descanso | Tablero de corcho personal (*con contenido de ejemplo por sustituir*) y cafetera |
+| 7 | Sala de servidores | CI/CD, calidad y seguridad, operación y automatización (un rack cada uno) |
+| 8 | Baños | Cerrado: "Fuera de servicio" |
+| 9 | Archivo de proyectos | Un archivero por proyecto: iTeamApp, Kontrolia, GtrackApp, legados, cursos, componentes y automatización |
+| 10 | Laboratorio técnico | Arquitectura (pizarrón), decisiones técnicas (terminal) y experimentos (banco de pruebas) |
+| 11 | Recursos humanos | Cerrado por hoy |
+
+Todos los textos están en `src/content/portfolio.ts`, tomados del CV y con descripciones genéricas por confidencialidad. Lo que no está en el CV aparece marcado como **contenido de ejemplo**.
+
+## Ajustes
+
+Se guardan en el navegador (`localStorage`):
+
+- **Cámara:** primera persona o cámara clásica (fija, con control tipo tanque).
+- **Resolución interna:** 240, 360 o 540 líneas. El 3D se escala con `image-rendering: pixelated`; la interfaz HTML siempre se ve nítida.
+- **Temblor de vértices** (PS1) y **scanlines con viñeta**, activables por separado.
+- **Sensibilidad del ratón.**
+
+## Accesibilidad
+
+- Pantalla inicial con **Entrar a la oficina**, la explicación de controles y **Ver portafolio sin recorrer**.
+- **Índice** (`I`): todo el contenido en HTML navegable con teclado, agrupado por cuarto.
+- Sin WebGL, la página muestra directamente el índice con un aviso.
+- Diálogos con foco inicial, cierre con `E`/`Esc` y animaciones reducidas con `prefers-reduced-motion`.
 
 ## Arquitectura
 
 ```text
 src/
-├── App.tsx                       # Solo compone: canvas + HUD + teclas
-├── content/portfolio.ts          # Textos de terminales, proyectos y CV
-├── store/gameStore.ts            # Zustand: cuarto actual, inventario, puertas, paneles, mapa, transiciones
-├── hooks/useInteractionKeys.ts   # E, M y Esc
+├── App.tsx                        # Canvas + HUD; vista sin WebGL
+├── content/portfolio.ts           # Todo el texto del portafolio
+├── store/
+│   ├── gameStore.ts               # Zustand: cuarto, inventario, puertas, ventanas, pausa, transiciones
+│   └── settings.ts                # Ajustes persistidos
+├── hooks/
+│   ├── useInteractionKeys.ts      # E, M, I, Esc
+│   └── usePointerLockSync.ts      # Captura del ratón según las ventanas abiertas
 ├── world/
-│   ├── building.ts               # Cuartos, puertas, cámaras por zona, muebles sólidos (fuente única)
-│   ├── collision.ts              # Colisión círculo vs. muros y muebles del cuarto actual
-│   ├── interactions.ts           # Objetos interactuables y detección "al alcance y de frente"
-│   ├── player.ts                 # Posición del personaje compartida fuera de React
-│   ├── lowPoly.ts                # Geometrías y texturas del personaje
-│   ├── officeTextures.ts         # Losetas, muros, madera, pantallas y letreros (32 px, nearest)
-│   ├── textures.ts / ps1Material.ts
-│   └── controls.ts
-├── scenes/Office.tsx             # Niebla, luces globales, cámara, edificio y personaje
+│   ├── building.ts                # Cuartos, puertas, cámaras fijas, muebles sólidos (fuente única)
+│   ├── interactions.ts            # Objetos interactuables (id, nombre, tipo, ayuda, acción) y detección
+│   ├── collision.ts               # Círculo contra muros y muebles del cuarto actual
+│   ├── player.ts                  # Posición, rumbo e inclinación del jugador fuera de React
+│   ├── ps1Material.ts             # Temblor de vértices con un uniforme compartido
+│   ├── officeTextures.ts, textures.ts, lowPoly.ts, controls.ts, pointerLock.ts
+├── scenes/Office.tsx              # Niebla, luces globales, cámara según el modo, edificio
 ├── components/
-│   ├── Building.tsx              # Monta los cuartos construidos; solo el actual es visible
-│   ├── CameraRig.tsx             # Corta entre cámaras fijas según la zona del personaje
-│   ├── Character.tsx / CharacterModel.tsx
-│   ├── rooms/                    # RoomShell, DoorPanel, props y un archivo por cuarto
-│   └── ui/                       # Terminal, mensajes, plano, título del cuarto, inventario, fundido
+│   ├── PlayerController.tsx       # Movimiento en ambos modos, colisiones e interacción
+│   ├── FirstPersonCamera.tsx      # Cámara en los ojos con balanceo al caminar
+│   ├── CameraRig.tsx              # Cámaras fijas por zona (modo clásico)
+│   ├── CharacterAvatar.tsx, CharacterModel.tsx
+│   ├── Building.tsx               # Monta los cuartos; solo el actual es visible
+│   ├── rooms/                     # RoomShell (muros con vanos), DoorPanel (bisagra), props y un archivo por cuarto
+│   └── ui/                        # Inicio, pausa, ajustes, índice, terminal, plano, mensajes, retícula…
 └── styles/game.css
-public/cv/                        # CV en PDF que se descarga desde el expediente
 ```
 
-- **Coordenadas:** el plano usa metros, con X hacia el este y Z hacia la entrada (sur). Cada cuarto es un rectángulo; las puertas viven en los muros compartidos.
-- **Puertas:** al usar una puerta la pantalla funde a negro, el personaje aparece del otro lado mirando hacia dentro y se muestra el nombre del cuarto.
-- **Cámaras:** cada cuarto tiene una o más zonas. El lobby tiene dos y la cámara corta de golpe al cruzar de una a otra. La cámara de cada cuarto está en la esquina opuesta a su puerta para que el personaje se vea al entrar.
-- **Rendimiento:** solo el cuarto actual es visible, así que solo sus luces cuentan.
-- **Para construir un cuarto nuevo:** márcalo `built: true` en `building.ts` con sus cámaras y obstáculos, cambia el `lock` de su puerta a `'none'`, crea su componente en `components/rooms/` y regístralo en `Building.tsx`.
+- **Puertas:** cada muro tiene vanos reales con dintel. La hoja gira sobre su bisagra hacia el otro cuarto (un hueco oscuro) y después la pantalla funde a negro. Si está cerrada, la hoja se sacude y aparece un mensaje claro.
+- **Interacción:** proximidad más orientación. En primera persona el objeto debe estar al centro de la vista; la retícula se abre cuando hay algo al alcance.
+- **Rendimiento:** solo el cuarto actual se dibuja y solo sus luces cuentan. Las texturas miden 8–128 px, no hay sombras dinámicas ni posprocesado, y el temblor de vértices es un uniforme compartido. Los LEDs de los racks se animan desplazando una textura, sin crear objetos. `useFrame` no crea objetos por fotograma.
+- **Cuarto nuevo:** márcalo `built: true` en `building.ts` con cámaras y obstáculos, pon el `lock` de su puerta en `'none'`, crea su componente en `components/rooms/` y regístralo en `Building.tsx`. Sus objetos interactuables van en `world/interactions.ts` y sus textos en `content/portfolio.ts`.
 
-### Personaje
-
-Prismas de 5–6 caras, torso hexagonal y cabeza facetada con `flatShading`. La cara (ojos, cejas, lentes) está pintada en una textura de 32 px proyectada de frente, como en los modelos de PS1. Lleva sombrero fedora, cabello largo, camisa negra arremangada y pantalón gris.
-
-### Estética
-
-Render a unas 360 líneas escalado con `image-rendering: pixelated`, sin antialiasing ni tone mapping, *vertex snapping*, texturas diminutas, niebla, plafones que parpadean, scanlines y viñeta. Cada cuarto tiene una luz de relleno desde su cámara para que el personaje se lea en la penumbra.
-
-### Librerías
-
-- **three / @react-three/fiber:** render 3D declarativo con React.
-- **@react-three/drei:** `PerspectiveCamera` y `KeyboardControls`.
-- **zustand:** estado compartido entre la escena 3D y la interfaz HTML.
+Los créditos de recursos están en [`ASSET_CREDITS.md`](ASSET_CREDITS.md).
 
 ---
 

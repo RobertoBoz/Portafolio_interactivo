@@ -1,7 +1,7 @@
 import { isBusy, useGameStore } from '../../store/gameStore'
 import { interactableById } from '../../world/interactions'
 
-/** Indicador "[E] ..." cuando el personaje está frente a algo con lo que puede interactuar. */
+/** Indicador discreto "E — …" cuando hay algo al alcance. */
 export function InteractionPrompt() {
   const nearby = useGameStore((state) => state.nearby)
   const busy = useGameStore(isBusy)
@@ -11,7 +11,7 @@ export function InteractionPrompt() {
 
   return (
     <div className="prompt" role="status">
-      <kbd>E</kbd> {label}
+      <kbd>E</kbd> — {label}
     </div>
   )
 }

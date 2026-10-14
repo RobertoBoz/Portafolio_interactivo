@@ -11,6 +11,7 @@ export function MapOverlay() {
   const visited = useGameStore((state) => state.visited)
   const unlockedDoors = useGameStore((state) => state.unlockedDoors)
   const close = useGameStore((state) => state.close)
+  const returnToLobby = useGameStore((state) => state.returnToLobby)
   const closeButton = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -105,9 +106,14 @@ export function MapOverlay() {
                 </li>
               ))}
             </ol>
-            <button ref={closeButton} type="button" className="crt__close map__close" onClick={close}>
-              [M] Cerrar
-            </button>
+            <div className="map__actions">
+              <button type="button" className="ui-button" onClick={returnToLobby}>
+                Volver al lobby
+              </button>
+              <button ref={closeButton} type="button" className="ui-button" onClick={close}>
+                Cerrar <kbd>M</kbd>
+              </button>
+            </div>
           </aside>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { LOBBY_LAYOUT, ROOMS } from '../../world/building'
-import { codeScreenTexture, mottoTexture, rugTexture, woodTexture } from '../../world/officeTextures'
+import { LOBBY_LAYOUT, ROOMS, ROOM_LIST } from '../../world/building'
+import { codeScreenTexture, directoryTexture, mottoTexture, rugTexture, woodTexture } from '../../world/officeTextures'
 import { Box, CeilingLight, Flat, Monitor, Plant, Sofa, WallScreen } from './props'
 
 const DESK_SEGMENTS = 7
@@ -16,6 +16,7 @@ export function Lobby() {
       wood: woodTexture(77, '#4a3524'),
       rug: rugTexture(),
       terminal: codeScreenTexture('WELCOME', 91, '#9ece6a'),
+      directory: directoryTexture(ROOM_LIST.map((room) => ({ number: room.number, name: room.mapLabel ?? room.name, open: room.built }))),
     }),
     [],
   )
@@ -42,7 +43,7 @@ export function Lobby() {
           </group>
         )
       })}
-      <Monitor screen={textures.terminal} position={[LOBBY_LAYOUT.terminal[0], DESK_HEIGHT + 0.05, LOBBY_LAYOUT.terminal[2] - 0.25]} />
+      <Monitor screen={textures.terminal} position={[LOBBY_LAYOUT.terminal[0], DESK_HEIGHT + 0.05, LOBBY_LAYOUT.terminal[2]]} />
       <pointLight position={[0, 0.3, -3.1]} color="#ffb45a" intensity={1.6} distance={3.5} decay={2} />
 
       {/* Muro con el lema */}
@@ -79,6 +80,14 @@ export function Lobby() {
         <Box size={[0.04, 0.5, 0.06]} position={[0.12, 1.1, 0.06]} color="#9a9c98" />
       </group>
       <pointLight position={[0, 1.6, rect.maxZ - 0.6]} color="#4f7bb3" intensity={1.2} distance={4} decay={2} />
+
+      {/* Directorio de pie: punto de orientación (abre el plano) */}
+      <group position={[LOBBY_LAYOUT.directory[0], 0, LOBBY_LAYOUT.directory[1]]} rotation-y={Math.PI * 0.85}>
+        <Box size={[0.08, 1.2, 0.08]} position={[0, 0.6, 0]} color="#141416" />
+        <Box size={[0.5, 0.04, 0.3]} position={[0, 0.02, 0]} color="#141416" />
+        <WallScreen texture={textures.directory} width={0.7} height={0.7} position={[0, 1.55, 0.05]} glow={false} />
+      </group>
+      <pointLight position={[LOBBY_LAYOUT.directory[0], 2.4, LOBBY_LAYOUT.directory[1] - 0.6]} color="#ffd9a0" intensity={1.2} distance={3} decay={2} />
 
       {LOBBY_LAYOUT.planters.map(([x, z]) => (
         <Plant key={x} position={[x, 0, z]} size={1.25} />

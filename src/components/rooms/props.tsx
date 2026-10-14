@@ -118,24 +118,25 @@ export function Plant({ size = 1, ...placement }: Placement & { size?: number })
   )
 }
 
-/** Monitor plano con pantalla emisiva. `screen` es la textura de la pantalla. */
+/** Monitor CRT de los noventa: carcasa beige y pantalla emisiva. `screen` es la textura de la pantalla. */
 export function Monitor({
   screen,
-  width = 0.55,
+  width = 0.42,
   ...placement
 }: Placement & { screen: THREE.Texture; width?: number }) {
   const material = useRef<THREE.MeshBasicMaterial>(null)
   const seed = useMemo(() => Math.random() * 10, [])
   useFrame(({ clock }) => {
-    if (material.current) material.current.color.setScalar(0.88 + Math.sin(clock.elapsedTime * 6 + seed) * 0.04)
+    if (material.current) material.current.color.setScalar(0.86 + Math.sin(clock.elapsedTime * 7 + seed) * 0.05)
   })
-  const height = width * 0.62
+  const height = width * 0.76
+  const body = width + 0.1
   return (
     <Placed {...placement}>
-      <Box size={[0.18, 0.02, 0.14]} position={[0, 0.01, -0.02]} color="#151517" />
-      <Box size={[0.04, 0.16, 0.03]} position={[0, 0.1, -0.05]} color="#151517" />
-      <Box size={[width + 0.04, height + 0.04, 0.035]} position={[0, 0.18 + height / 2, -0.03]} color="#101012" />
-      <mesh position={[0, 0.18 + height / 2, -0.01]}>
+      <Box size={[0.3, 0.04, 0.26]} position={[0, 0.02, -0.08]} color="#6d6858" />
+      <Box size={[body, height + 0.1, body * 0.85]} position={[0, 0.06 + (height + 0.1) / 2, -0.12]} color="#8c8672" />
+      <Box size={[body * 0.7, height * 0.8, 0.2]} position={[0, 0.06 + (height + 0.1) / 2, -0.12 - body * 0.5]} color="#7a7563" />
+      <mesh position={[0, 0.06 + (height + 0.1) / 2, -0.12 + (body * 0.85) / 2 + 0.002]}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial ref={material} map={screen} fog={false} />
       </mesh>
@@ -232,5 +233,81 @@ export function CeilingLight({
       </mesh>
       <pointLight ref={light} position={[0, -0.3, 0]} color={color} intensity={intensity} distance={distance} decay={1.4} />
     </group>
+  )
+}
+
+/** Papeles, taza y un cable: detalles para que los escritorios no se vean vacíos. */
+export function DeskClutter({ seed = 0, ...placement }: Placement & { seed?: number }) {
+  const offset = (seed % 3) * 0.08
+  return (
+    <Placed {...placement}>
+      <Box size={[0.22, 0.008, 0.3]} position={[-0.35 + offset, 0.004, 0.05]} rotationY={0.2 + seed} color="#d9d4c7" />
+      <Box size={[0.22, 0.008, 0.3]} position={[-0.32 + offset, 0.012, 0.08]} rotationY={-0.1 + seed} color="#c9c2b0" />
+      <mesh position={[0.4 - offset, 0.05, 0.12]}>
+        <cylinderGeometry args={[0.04, 0.035, 0.1, 6]} />
+        <Flat color={seed % 2 ? '#7a2a24' : '#2a3a5a'} />
+      </mesh>
+    </Placed>
+  )
+}
+
+/** Cable en el piso, de un mueble a la pared. */
+export function FloorCable({ from, to }: { from: [number, number]; to: [number, number] }) {
+  const dx = to[0] - from[0]
+  const dz = to[1] - from[1]
+  const length = Math.hypot(dx, dz)
+  return (
+    <Box
+      size={[0.025, 0.015, length]}
+      position={[(from[0] + to[0]) / 2, 0.008, (from[1] + to[1]) / 2]}
+      rotationY={Math.atan2(dx, dz)}
+      color="#0c0c0d"
+    />
+  )
+}
+
+/** Archivero metálico de cajones con etiqueta. */
+export function FilingCabinet({
+  label,
+  width = 0.9,
+  depth = 0.6,
+  height = 1.4,
+  ...placement
+}: Placement & { label: THREE.Texture; width?: number; depth?: number; height?: number }) {
+  const drawers = 4
+  const drawerHeight = (height - 0.08) / drawers
+  return (
+    <Placed {...placement}>
+      <Box size={[width, height, depth]} position={[0, height / 2, 0]} color="#4a5058" />
+      {Array.from({ length: drawers }, (_, i) => (
+        <group key={i} position={[0, 0.06 + drawerHeight * (i + 0.5), depth / 2]}>
+          <Box size={[width - 0.08, drawerHeight - 0.04, 0.02]} position={[0, 0, 0.005]} color="#58606a" />
+          <Box size={[0.18, 0.025, 0.03]} position={[0, -drawerHeight * 0.2, 0.025]} color="#9a9c98" />
+        </group>
+      ))}
+      <mesh position={[0, height - 0.18, depth / 2 + 0.03]}>
+        <planeGeometry args={[width - 0.16, 0.16]} />
+        <meshLambertMaterial map={label} />
+      </mesh>
+    </Placed>
+  )
+}
+
+/** Gabinete de servidores con frente de LEDs. */
+export function ServerRack({
+  front,
+  width = 0.66,
+  depth = 1.0,
+  height = 2.1,
+  ...placement
+}: Placement & { front: THREE.Texture; width?: number; depth?: number; height?: number }) {
+  return (
+    <Placed {...placement}>
+      <Box size={[width, height, depth]} position={[0, height / 2, 0]} color="#16181c" />
+      <mesh position={[0, height / 2, depth / 2 + 0.006]}>
+        <planeGeometry args={[width - 0.08, height - 0.12]} />
+        <meshBasicMaterial map={front} fog={false} />
+      </mesh>
+    </Placed>
   )
 }

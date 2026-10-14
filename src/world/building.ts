@@ -77,12 +77,15 @@ export const LOBBY_LAYOUT = {
     [4.3, 11.3],
   ] as [number, number][],
   entrance: [0, 12] as [number, number],
+  /** Directorio de pie junto a la entrada: punto de orientación. */
+  directory: [2.4, 9.6] as [number, number],
 } as const
 
 export const RECEPTION_LAYOUT = {
   desk: { center: [-8.6, 9.75] as [number, number], width: 2.6, depth: 0.75 },
   computer: [-9.3, 9.65] as [number, number],
   keycard: [-7.75, 9.85] as [number, number],
+  businessCards: [-8.5, 9.9] as [number, number],
   sofa: [-10.45, 11.3] as [number, number],
   plant: [-10.5, 9.5] as [number, number],
 } as const
@@ -113,6 +116,60 @@ export const OFFICE_LAYOUT = {
   armchair: [-7.2, 8.25] as [number, number],
 } as const
 
+export const MEETING_LAYOUT = {
+  table: { center: [-10, -9] as [number, number], width: 4.0, depth: 1.6 },
+  projector: [-10, -12.94] as [number, number],
+  whiteboard: [-5.06, -10.5] as [number, number],
+  plants: [
+    [-14.4, -12.4],
+    [-5.6, -12.4],
+  ] as [number, number][],
+} as const
+
+export const BREAK_LAYOUT = {
+  counter: { center: [1.75, -12.7] as [number, number], width: 5.5, depth: 0.6 },
+  fridge: [4.5, -12.6] as [number, number],
+  coffee: [0.6, -12.7] as [number, number],
+  table: { center: [0, -9.9] as [number, number], width: 1.6, depth: 0.9 },
+  corkboard: [-4.94, -10.3] as [number, number],
+  sofa: [4.45, -9.6] as [number, number],
+  plant: [-4.4, -12.4] as [number, number],
+} as const
+
+export const SERVER_LAYOUT = {
+  /** Grupos de tres gabinetes; el frente mira al sur (+Z). */
+  racks: [
+    [8, -11],
+    [12, -11],
+    [8, -8.2],
+    [12, -8.2],
+  ] as [number, number][],
+  rackGroup: { width: 2.1, depth: 1.0, height: 2.1 },
+} as const
+
+export const ARCHIVE_LAYOUT = {
+  /** Archiveros: cuatro contra el muro norte y cuatro contra el sur, mirando al pasillo. */
+  cabinets: [
+    [7, -0.7, 0],
+    [9.2, -0.7, 0],
+    [11.4, -0.7, 0],
+    [13.6, -0.7, 0],
+    [7, 2.7, Math.PI],
+    [9.2, 2.7, Math.PI],
+    [11.4, 2.7, Math.PI],
+    [13.6, 2.7, Math.PI],
+  ] as [number, number, number][],
+  cabinet: { width: 0.9, depth: 0.6, height: 1.4 },
+} as const
+
+export const LAB_LAYOUT = {
+  whiteboard: [10.5, 8.94] as [number, number],
+  terminalDesk: { center: [13.6, 8.35] as [number, number], width: 1.6, depth: 0.9 },
+  terminal: [13.6, 8.2] as [number, number],
+  bench: { center: [9.5, 5.6] as [number, number], width: 2.4, depth: 1.0 },
+  shelf: [6.2, 3.3] as [number, number],
+} as const
+
 /* ----------------------------------- Cuartos ----------------------------------- */
 
 const lobbyDesk = rectAround(0, -5.25, 6.6, 3.9)
@@ -140,6 +197,7 @@ export const ROOMS: Record<RoomId, RoomDef> = {
       ...LOBBY_LAYOUT.sofas.map(([x, z]) => rectAround(x, z, 0.9, 2.1)),
       rectAround(LOBBY_LAYOUT.coffeeTable[0], LOBBY_LAYOUT.coffeeTable[1], 1.1, 0.8),
       ...LOBBY_LAYOUT.planters.map(([x, z]) => rectAround(x, z, 0.8, 0.8)),
+      rectAround(LOBBY_LAYOUT.directory[0], LOBBY_LAYOUT.directory[1], 0.5, 0.4),
     ],
   },
   recepcion: {
@@ -197,17 +255,98 @@ export const ROOMS: Record<RoomId, RoomDef> = {
       ...DEV_LAYOUT.plants.map(([x, z]) => rectAround(x, z, 0.6, 0.6)),
     ],
   },
-  juntas: placeholder('juntas', 5, 'Sala de juntas', { minX: -15, maxX: -5, minZ: -13, maxZ: -5 }),
-  comedor: { ...placeholder('comedor', 6, 'Comedor / Descanso', { minX: -5, maxX: 5, minZ: -13, maxZ: -7 }), mapLabel: 'Comedor' },
-  servidores: placeholder('servidores', 7, 'Sala de servidores', { minX: 5, maxX: 15, minZ: -13, maxZ: -5 }),
+  juntas: {
+    id: 'juntas',
+    number: 5,
+    name: 'Sala de juntas',
+    rect: { minX: -15, maxX: -5, minZ: -13, maxZ: -5 },
+    built: true,
+    cameras: [
+      {
+        zone: { minX: -15, maxX: -5, minZ: -13, maxZ: -5 },
+        shot: { position: [-14.6, 3.0, -5.4], target: [-8.5, 0.6, -10], fov: 62 },
+      },
+    ],
+    obstacles: [
+      rectAround(MEETING_LAYOUT.table.center[0], MEETING_LAYOUT.table.center[1], MEETING_LAYOUT.table.width + 0.6, MEETING_LAYOUT.table.depth + 1.2),
+      ...MEETING_LAYOUT.plants.map(([x, z]) => rectAround(x, z, 0.6, 0.6)),
+    ],
+  },
+  comedor: {
+    id: 'comedor',
+    number: 6,
+    name: 'Comedor / Descanso',
+    mapLabel: 'Comedor',
+    rect: { minX: -5, maxX: 5, minZ: -13, maxZ: -7 },
+    built: true,
+    cameras: [
+      {
+        zone: { minX: -5, maxX: 5, minZ: -13, maxZ: -7 },
+        shot: { position: [4.6, 2.9, -7.4], target: [-1.5, 0.6, -11], fov: 62 },
+      },
+    ],
+    obstacles: [
+      rectAround(BREAK_LAYOUT.counter.center[0], BREAK_LAYOUT.counter.center[1], BREAK_LAYOUT.counter.width, BREAK_LAYOUT.counter.depth),
+      rectAround(BREAK_LAYOUT.table.center[0], BREAK_LAYOUT.table.center[1], BREAK_LAYOUT.table.width + 0.8, BREAK_LAYOUT.table.depth + 1.0),
+      rectAround(BREAK_LAYOUT.fridge[0], BREAK_LAYOUT.fridge[1], 0.8, 0.75),
+      rectAround(BREAK_LAYOUT.sofa[0], BREAK_LAYOUT.sofa[1], 0.9, 2.0),
+      rectAround(BREAK_LAYOUT.plant[0], BREAK_LAYOUT.plant[1], 0.6, 0.6),
+    ],
+  },
+  servidores: {
+    id: 'servidores',
+    number: 7,
+    name: 'Sala de servidores',
+    rect: { minX: 5, maxX: 15, minZ: -13, maxZ: -5 },
+    built: true,
+    cameras: [
+      {
+        zone: { minX: 5, maxX: 15, minZ: -13, maxZ: -5 },
+        shot: { position: [14.6, 3.0, -5.4], target: [8, 0.6, -10], fov: 62 },
+      },
+    ],
+    obstacles: SERVER_LAYOUT.racks.map(([x, z]) =>
+      rectAround(x, z, SERVER_LAYOUT.rackGroup.width, SERVER_LAYOUT.rackGroup.depth),
+    ),
+  },
   banos: placeholder('banos', 8, 'Baños', { minX: 5, maxX: 15, minZ: -5, maxZ: -1 }),
-  almacen: placeholder('almacen', 9, 'Almacén', { minX: 5, maxX: 15, minZ: -1, maxZ: 3 }),
-  diseno: placeholder('diseno', 10, 'Diseño UX/UI', { minX: 5, maxX: 15, minZ: 3, maxZ: 9 }),
+  almacen: {
+    id: 'almacen',
+    number: 9,
+    name: 'Archivo de proyectos',
+    mapLabel: 'Archivo',
+    rect: { minX: 5, maxX: 15, minZ: -1, maxZ: 3 },
+    built: true,
+    cameras: [
+      {
+        zone: { minX: 5, maxX: 15, minZ: -1, maxZ: 3 },
+        shot: { position: [14.7, 2.8, 1], target: [6, 0.5, 1], fov: 64 },
+      },
+    ],
+    obstacles: ARCHIVE_LAYOUT.cabinets.map(([x, z]) =>
+      rectAround(x, z, ARCHIVE_LAYOUT.cabinet.width, ARCHIVE_LAYOUT.cabinet.depth),
+    ),
+  },
+  diseno: {
+    id: 'diseno',
+    number: 10,
+    name: 'Laboratorio técnico',
+    mapLabel: 'Laboratorio',
+    rect: { minX: 5, maxX: 15, minZ: 3, maxZ: 9 },
+    built: true,
+    cameras: [
+      {
+        zone: { minX: 5, maxX: 15, minZ: 3, maxZ: 9 },
+        shot: { position: [14.6, 2.9, 3.4], target: [8, 0.6, 7.2], fov: 62 },
+      },
+    ],
+    obstacles: [
+      rectAround(LAB_LAYOUT.terminalDesk.center[0], LAB_LAYOUT.terminalDesk.center[1], LAB_LAYOUT.terminalDesk.width, LAB_LAYOUT.terminalDesk.depth),
+      rectAround(LAB_LAYOUT.bench.center[0], LAB_LAYOUT.bench.center[1], LAB_LAYOUT.bench.width, LAB_LAYOUT.bench.depth),
+      rectAround(LAB_LAYOUT.shelf[0], LAB_LAYOUT.shelf[1], 1.6, 0.5),
+    ],
+  },
   rh: { ...placeholder('rh', 11, 'Recursos humanos', { minX: 5, maxX: 11, minZ: 9, maxZ: 13 }), mapLabel: 'RR. HH.' },
-}
-
-function placeholder(id: RoomId, number: number, name: string, rect: Rect): RoomDef {
-  return { id, number, name, rect, built: false, cameras: [], obstacles: [] }
 }
 
 export const ROOM_LIST: RoomDef[] = Object.values(ROOMS).sort((a, b) => a.number - b.number)
@@ -218,6 +357,8 @@ export type DoorLock = 'none' | 'keycard' | 'soon'
 
 export type DoorDef = {
   id: string
+  /** Mensaje propio cuando la puerta no abre (lock = 'soon'). */
+  lockedMessage?: string[]
   rooms: [RoomId, RoomId]
   x: number
   z: number
@@ -230,13 +371,29 @@ export const DOORS: DoorDef[] = [
   { id: 'lobby-recepcion', rooms: ['lobby', 'recepcion'], x: -5, z: 10.5, axis: 'x', lock: 'none' },
   { id: 'lobby-oficina', rooms: ['lobby', 'oficina'], x: -5, z: 6, axis: 'x', lock: 'keycard' },
   { id: 'lobby-desarrollo', rooms: ['lobby', 'desarrollo'], x: -5, z: -1, axis: 'x', lock: 'none' },
-  { id: 'lobby-juntas', rooms: ['lobby', 'juntas'], x: -5, z: -6.1, axis: 'x', lock: 'soon' },
-  { id: 'lobby-comedor', rooms: ['lobby', 'comedor'], x: -3.9, z: -7, axis: 'z', lock: 'soon' },
-  { id: 'lobby-servidores', rooms: ['lobby', 'servidores'], x: 5, z: -6.1, axis: 'x', lock: 'soon' },
-  { id: 'lobby-banos', rooms: ['lobby', 'banos'], x: 5, z: -3, axis: 'x', lock: 'soon' },
-  { id: 'lobby-almacen', rooms: ['lobby', 'almacen'], x: 5, z: 1, axis: 'x', lock: 'soon' },
-  { id: 'lobby-diseno', rooms: ['lobby', 'diseno'], x: 5, z: 6, axis: 'x', lock: 'soon' },
-  { id: 'lobby-rh', rooms: ['lobby', 'rh'], x: 5, z: 10.5, axis: 'x', lock: 'soon' },
+  { id: 'lobby-juntas', rooms: ['lobby', 'juntas'], x: -5, z: -6.1, axis: 'x', lock: 'none' },
+  { id: 'lobby-comedor', rooms: ['lobby', 'comedor'], x: -3.9, z: -7, axis: 'z', lock: 'none' },
+  { id: 'lobby-servidores', rooms: ['lobby', 'servidores'], x: 5, z: -6.1, axis: 'x', lock: 'none' },
+  {
+    id: 'lobby-banos',
+    rooms: ['lobby', 'banos'],
+    x: 5,
+    z: -3,
+    axis: 'x',
+    lock: 'soon',
+    lockedMessage: ['Un letrero escrito a mano:', '"Fuera de servicio."'],
+  },
+  { id: 'lobby-almacen', rooms: ['lobby', 'almacen'], x: 5, z: 1, axis: 'x', lock: 'none' },
+  { id: 'lobby-diseno', rooms: ['lobby', 'diseno'], x: 5, z: 6, axis: 'x', lock: 'none' },
+  {
+    id: 'lobby-rh',
+    rooms: ['lobby', 'rh'],
+    x: 5,
+    z: 10.5,
+    axis: 'x',
+    lock: 'soon',
+    lockedMessage: ['Recursos humanos.', 'Cerrado por hoy. Vuelve en horario de oficina.'],
+  },
 ]
 
 export const DOOR_SIZE = { width: 1.1, height: 2.2 } as const
