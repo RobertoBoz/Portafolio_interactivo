@@ -8,6 +8,10 @@ Portafolio interactivo de Roberto Bolaños inspirado en los survival horror de P
 
 Requisitos: [Node.js](https://nodejs.org) 20 o superior.
 
+En Windows basta con dar doble clic a **`iniciar.bat`**: instala las dependencias la primera vez, levanta el servidor y abre el navegador.
+
+O desde una terminal:
+
 ```bash
 npm install
 npm run dev
