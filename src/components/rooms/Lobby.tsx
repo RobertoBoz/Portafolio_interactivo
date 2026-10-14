@@ -84,8 +84,9 @@ export function Lobby() {
         <Plant key={x} position={[x, 0, z]} size={1.25} />
       ))}
 
-      <CeilingLight position={[0, 3.18, -1.5]} intensity={7} distance={12} />
-      <CeilingLight position={[0, 3.18, 7]} intensity={5} distance={11} flicker />
+      <CeilingLight position={[0, 3.18, -1.5]} intensity={9} distance={12} />
+      <CeilingLight position={[0, 3.18, 3.5]} intensity={6} distance={10} />
+      <CeilingLight position={[0, 3.18, 8]} intensity={7} distance={11} flicker />
     </group>
   )
 }

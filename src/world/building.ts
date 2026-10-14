@@ -31,6 +31,8 @@ export type RoomDef = {
   id: RoomId
   number: number
   name: string
+  /** Nombre corto para el plano, si el nombre completo no cabe. */
+  mapLabel?: string
   rect: Rect
   /** false = todavía no se construye; su puerta queda cerrada. */
   built: boolean
@@ -81,7 +83,7 @@ export const RECEPTION_LAYOUT = {
   desk: { center: [-8.6, 9.75] as [number, number], width: 2.6, depth: 0.75 },
   computer: [-9.3, 9.65] as [number, number],
   keycard: [-7.75, 9.85] as [number, number],
-  sofa: [-9.4, 12.45] as [number, number],
+  sofa: [-10.45, 11.3] as [number, number],
   plant: [-10.5, 9.5] as [number, number],
 } as const
 
@@ -98,15 +100,16 @@ export const DEV_LAYOUT = {
   deskSize: { width: 1.8, depth: 0.8 },
   plants: [
     [-14.4, -4.4],
-    [-14.4, 2.4],
+    [-5.6, -4.4],
   ] as [number, number][],
 } as const
 
 export const OFFICE_LAYOUT = {
-  desk: { center: [-12, 6] as [number, number], width: 0.9, depth: 2.0 },
-  computer: [-12.15, 6.3] as [number, number],
-  shelf: { center: [-9.2, 3.25] as [number, number], width: 1.8, depth: 0.45 },
-  plant: [-14.4, 8.4] as [number, number],
+  /** El monitor mira al sur (+Z), como en Desarrollo. */
+  desk: { center: [-10.2, 5.1] as [number, number], width: 2.0, depth: 0.9 },
+  computer: [-10.4, 5.0] as [number, number],
+  shelf: { center: [-13.2, 3.25] as [number, number], width: 1.8, depth: 0.45 },
+  plant: [-5.6, 3.6] as [number, number],
   armchair: [-7.2, 8.25] as [number, number],
 } as const
 
@@ -128,7 +131,7 @@ export const ROOMS: Record<RoomId, RoomDef> = {
       },
       {
         zone: { minX: -5, maxX: 5, minZ: 2.5, maxZ: 12 },
-        shot: { position: [4.3, 3.1, 11.4], target: [-0.9, 0.8, 3.4], fov: 60 },
+        shot: { position: [4.3, 3.1, 11.5], target: [-2.5, 0.5, 5.5], fov: 60 },
       },
     ],
     obstacles: [
@@ -148,12 +151,12 @@ export const ROOMS: Record<RoomId, RoomDef> = {
     cameras: [
       {
         zone: { minX: -11, maxX: -5, minZ: 9, maxZ: 13 },
-        shot: { position: [-5.4, 2.8, 12.6], target: [-9.2, 0.6, 10.1], fov: 62 },
+        shot: { position: [-9.2, 2.8, 12.85], target: [-7, 0.6, 9.9], fov: 64 },
       },
     ],
     obstacles: [
       rectAround(RECEPTION_LAYOUT.desk.center[0], RECEPTION_LAYOUT.desk.center[1], RECEPTION_LAYOUT.desk.width, RECEPTION_LAYOUT.desk.depth + 0.4),
-      rectAround(RECEPTION_LAYOUT.sofa[0], RECEPTION_LAYOUT.sofa[1], 2.0, 0.8),
+      rectAround(RECEPTION_LAYOUT.sofa[0], RECEPTION_LAYOUT.sofa[1], 0.8, 2.0),
       rectAround(RECEPTION_LAYOUT.plant[0], RECEPTION_LAYOUT.plant[1], 0.6, 0.6),
     ],
   },
@@ -166,11 +169,11 @@ export const ROOMS: Record<RoomId, RoomDef> = {
     cameras: [
       {
         zone: { minX: -15, maxX: -5, minZ: 3, maxZ: 9 },
-        shot: { position: [-5.5, 2.9, 8.6], target: [-11, 0.6, 5.1], fov: 60 },
+        shot: { position: [-14.6, 2.9, 8.6], target: [-8.5, 0.6, 4.8], fov: 60 },
       },
     ],
     obstacles: [
-      rectAround(OFFICE_LAYOUT.desk.center[0] - 0.2, OFFICE_LAYOUT.desk.center[1], OFFICE_LAYOUT.desk.width + 0.8, OFFICE_LAYOUT.desk.depth),
+      rectAround(OFFICE_LAYOUT.desk.center[0], OFFICE_LAYOUT.desk.center[1] + 0.15, OFFICE_LAYOUT.desk.width, OFFICE_LAYOUT.desk.depth + 0.3),
       rectAround(OFFICE_LAYOUT.shelf.center[0], OFFICE_LAYOUT.shelf.center[1], OFFICE_LAYOUT.shelf.width, OFFICE_LAYOUT.shelf.depth),
       rectAround(OFFICE_LAYOUT.plant[0], OFFICE_LAYOUT.plant[1], 0.6, 0.6),
       rectAround(OFFICE_LAYOUT.armchair[0], OFFICE_LAYOUT.armchair[1], 0.9, 0.9),
@@ -185,7 +188,7 @@ export const ROOMS: Record<RoomId, RoomDef> = {
     cameras: [
       {
         zone: { minX: -15, maxX: -5, minZ: -5, maxZ: 3 },
-        shot: { position: [-5.5, 3.0, 2.6], target: [-10.8, 0.6, -1.8], fov: 62 },
+        shot: { position: [-14.6, 3.0, 2.6], target: [-8.5, 0.6, -2], fov: 62 },
       },
     ],
     obstacles: [
@@ -195,12 +198,12 @@ export const ROOMS: Record<RoomId, RoomDef> = {
     ],
   },
   juntas: placeholder('juntas', 5, 'Sala de juntas', { minX: -15, maxX: -5, minZ: -13, maxZ: -5 }),
-  comedor: placeholder('comedor', 6, 'Comedor / Descanso', { minX: -5, maxX: 5, minZ: -13, maxZ: -7 }),
+  comedor: { ...placeholder('comedor', 6, 'Comedor / Descanso', { minX: -5, maxX: 5, minZ: -13, maxZ: -7 }), mapLabel: 'Comedor' },
   servidores: placeholder('servidores', 7, 'Sala de servidores', { minX: 5, maxX: 15, minZ: -13, maxZ: -5 }),
   banos: placeholder('banos', 8, 'Baños', { minX: 5, maxX: 15, minZ: -5, maxZ: -1 }),
   almacen: placeholder('almacen', 9, 'Almacén', { minX: 5, maxX: 15, minZ: -1, maxZ: 3 }),
   diseno: placeholder('diseno', 10, 'Diseño UX/UI', { minX: 5, maxX: 15, minZ: 3, maxZ: 9 }),
-  rh: placeholder('rh', 11, 'Recursos humanos', { minX: 5, maxX: 11, minZ: 9, maxZ: 13 }),
+  rh: { ...placeholder('rh', 11, 'Recursos humanos', { minX: 5, maxX: 11, minZ: 9, maxZ: 13 }), mapLabel: 'RR. HH.' },
 }
 
 function placeholder(id: RoomId, number: number, name: string, rect: Rect): RoomDef {

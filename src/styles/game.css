@@ -567,7 +567,7 @@ kbd {
   fill: #ffd27a;
   stroke: #000;
   stroke-width: 0.08;
-  animation: blink 1s steps(1) infinite;
+  animation: pulse 1s steps(2) infinite;
 }
 
 .map__legend {
@@ -640,5 +640,11 @@ kbd {
   }
   .fade {
     transition: none;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
   }
 }

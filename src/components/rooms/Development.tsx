@@ -41,18 +41,17 @@ export function Development() {
           texture={texture}
           width={1.5}
           height={0.9}
-          position={[rect.minX + 0.07, 1.9, i === 0 ? -2.7 : 0.5]}
-          rotationY={Math.PI / 2}
+          position={[i === 0 ? -12.6 : -8.4, 1.95, rect.minZ + 0.07]}
         />
       ))}
-      <pointLight position={[rect.minX + 0.8, 1.9, -1.1]} color="#3a8fd1" intensity={1.2} distance={4} decay={2} />
+      <pointLight position={[-10.5, 1.9, rect.minZ + 0.8]} color="#3a8fd1" intensity={1.2} distance={4} decay={2} />
 
       {DEV_LAYOUT.plants.map(([x, z]) => (
         <Plant key={z} position={[x, 0, z]} />
       ))}
 
-      <CeilingLight position={[-10.2, 3.18, -2.7]} color="#d6e4ff" intensity={5} distance={9} flicker />
-      <CeilingLight position={[-10.2, 3.18, 1.2]} color="#d6e4ff" intensity={5} distance={9} />
+      <CeilingLight position={[-10.2, 3.18, -2.7]} color="#d6e4ff" intensity={7} distance={10} flicker />
+      <CeilingLight position={[-10.2, 3.18, 1.2]} color="#d6e4ff" intensity={7} distance={10} />
     </group>
   )
 }

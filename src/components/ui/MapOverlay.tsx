@@ -51,7 +51,7 @@ export function MapOverlay() {
                     {room.number}
                   </text>
                   <text x={center.x} y={center.z + 0.9} className="map__label">
-                    {room.name.split(' / ')[0]}
+                    {room.mapLabel ?? room.name}
                   </text>
                 </g>
               )

@@ -35,11 +35,11 @@ export function Reception() {
         </group>
       )}
 
-      <Sofa position={[RECEPTION_LAYOUT.sofa[0], 0, RECEPTION_LAYOUT.sofa[1]]} rotationY={Math.PI} width={2.0} color="#26201c" />
+      <Sofa position={[RECEPTION_LAYOUT.sofa[0], 0, RECEPTION_LAYOUT.sofa[1]]} rotationY={Math.PI / 2} width={2.0} color="#26201c" />
       <Plant position={[RECEPTION_LAYOUT.plant[0], 0, RECEPTION_LAYOUT.plant[1]]} />
       <WallScreen texture={textures.sign} width={1.6} height={0.4} position={[-8.6, 2.3, rect.minZ + 0.06]} glow={false} />
 
-      <CeilingLight position={[-8, 3.18, 11]} intensity={5} distance={8} />
+      <CeilingLight position={[-8, 3.18, 11]} intensity={7} distance={9} />
     </group>
   )
 }

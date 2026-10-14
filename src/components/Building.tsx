@@ -16,10 +16,10 @@ const FURNITURE: Partial<Record<RoomId, () => ReactNode>> = {
 }
 
 const FLOORS: Partial<Record<RoomId, { floor: string; wall: string }>> = {
-  lobby: { floor: '#2c2e33', wall: '#3b4048' },
-  recepcion: { floor: '#2e2c2a', wall: '#3d3a38' },
-  desarrollo: { floor: '#272a30', wall: '#353b45' },
-  oficina: { floor: '#2d2924', wall: '#3e3833' },
+  lobby: { floor: '#36383e', wall: '#4a505a' },
+  recepcion: { floor: '#393633', wall: '#4d4945' },
+  desarrollo: { floor: '#32353c', wall: '#454c58' },
+  oficina: { floor: '#3a352f', wall: '#4e4740' },
 }
 
 /**

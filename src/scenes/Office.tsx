@@ -20,8 +20,8 @@ export function Office() {
     <>
       <color attach="background" args={[FOG_COLOR]} />
       <fog attach="fog" args={[FOG_COLOR, 5, 17]} />
-      <ambientLight color="#8b98a8" intensity={0.32} />
-      <directionalLight position={fill} color="#c9d2cc" intensity={0.7} />
+      <ambientLight color="#8b98a8" intensity={0.5} />
+      <directionalLight position={fill} color="#c9d2cc" intensity={0.85} />
 
       <CameraRig />
       <Building />
