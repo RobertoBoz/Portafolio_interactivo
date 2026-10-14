@@ -86,44 +86,85 @@ export function Character() {
     <group ref={root} position={CHARACTER.start} rotation-y={CHARACTER.startHeading}>
       {/* Sombra simple bajo los pies */}
       <mesh rotation-x={-Math.PI / 2} position={[0, 0.01, 0]}>
-        <circleGeometry args={[0.38, 8]} />
+        <circleGeometry args={[0.36, 8]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.5} depthWrite={false} />
       </mesh>
 
-      {/* Piernas (pivote en la cadera) */}
-      <group ref={leftLeg} position={[0.11, 0.86, 0]}>
-        <Part size={[0.15, 0.82, 0.17]} offset={[0, -0.41, 0]} color="#22252b" />
-        <Part size={[0.16, 0.08, 0.24]} offset={[0, -0.82, 0.04]} color="#141414" />
+      {/* Piernas: pantalón gris y zapatos negros (pivote en la cadera) */}
+      <group ref={leftLeg} position={[0.1, 0.86, 0]}>
+        <Part size={[0.15, 0.8, 0.16]} offset={[0, -0.4, 0]} color={COLORS.pants} />
+        <Part size={[0.15, 0.08, 0.26]} offset={[0, -0.82, 0.05]} color={COLORS.shoes} />
       </group>
-      <group ref={rightLeg} position={[-0.11, 0.86, 0]}>
-        <Part size={[0.15, 0.82, 0.17]} offset={[0, -0.41, 0]} color="#22252b" />
-        <Part size={[0.16, 0.08, 0.24]} offset={[0, -0.82, 0.04]} color="#141414" />
-      </group>
-
-      {/* Torso con chamarra */}
-      <Part size={[0.46, 0.6, 0.26]} offset={[0, 1.16, 0]} color="#3a2f2a" />
-      <Part size={[0.2, 0.42, 0.02]} offset={[0, 1.2, 0.135]} color="#9aa0a6" />
-
-      {/* Brazos (pivote en el hombro) */}
-      <group ref={leftArm} position={[0.3, 1.42, 0]}>
-        <Part size={[0.13, 0.56, 0.15]} offset={[0, -0.28, 0]} color="#3a2f2a" />
-        <Part size={[0.1, 0.1, 0.1]} offset={[0, -0.6, 0]} color="#b98d6c" />
-      </group>
-      <group ref={rightArm} position={[-0.3, 1.42, 0]}>
-        <Part size={[0.13, 0.56, 0.15]} offset={[0, -0.28, 0]} color="#3a2f2a" />
-        <Part size={[0.1, 0.1, 0.1]} offset={[0, -0.6, 0]} color="#b98d6c" />
+      <group ref={rightLeg} position={[-0.1, 0.86, 0]}>
+        <Part size={[0.15, 0.8, 0.16]} offset={[0, -0.4, 0]} color={COLORS.pants} />
+        <Part size={[0.15, 0.08, 0.26]} offset={[0, -0.82, 0.05]} color={COLORS.shoes} />
       </group>
 
-      {/* Cabeza */}
-      <Part size={[0.1, 0.08, 0.1]} offset={[0, 1.5, 0]} color="#b98d6c" />
-      <Part size={[0.26, 0.28, 0.26]} offset={[0, 1.67, 0]} color="#b98d6c" />
-      <Part size={[0.28, 0.1, 0.28]} offset={[0, 1.83, -0.01]} color="#1b1512" />
-      <Part size={[0.28, 0.3, 0.06]} offset={[0, 1.68, -0.13]} color="#1b1512" />
-      {/* Lentes: indican hacia dónde mira el personaje */}
-      <Part size={[0.22, 0.05, 0.02]} offset={[0, 1.69, 0.135]} color="#0c0c0c" />
+      {/* Camisa negra por fuera del pantalón */}
+      <Part size={[0.42, 0.66, 0.23]} offset={[0, 1.13, 0]} color={COLORS.shirt} />
+      <Part size={[0.44, 0.06, 0.25]} offset={[0, 0.82, 0]} color={COLORS.shirt} />
+      {/* Cuello y botonadura */}
+      <Part size={[0.2, 0.06, 0.2]} offset={[0, 1.47, 0.01]} color={COLORS.shirt} />
+      <Part size={[0.02, 0.6, 0.01]} offset={[0, 1.13, 0.12]} color={COLORS.shirtSeam} />
+
+      {/* Brazos: manga arremangada al codo y antebrazo descubierto (pivote en el hombro) */}
+      <group ref={leftArm} position={[0.28, 1.42, 0]}>
+        <Part size={[0.13, 0.3, 0.14]} offset={[0, -0.15, 0]} color={COLORS.shirt} />
+        <Part size={[0.14, 0.05, 0.15]} offset={[0, -0.3, 0]} color={COLORS.shirtSeam} />
+        <Part size={[0.09, 0.26, 0.1]} offset={[0, -0.45, 0]} color={COLORS.skin} />
+        <Part size={[0.08, 0.1, 0.09]} offset={[0, -0.62, 0.01]} color={COLORS.skin} />
+      </group>
+      <group ref={rightArm} position={[-0.28, 1.42, 0]}>
+        <Part size={[0.13, 0.3, 0.14]} offset={[0, -0.15, 0]} color={COLORS.shirt} />
+        <Part size={[0.14, 0.05, 0.15]} offset={[0, -0.3, 0]} color={COLORS.shirtSeam} />
+        <Part size={[0.09, 0.26, 0.1]} offset={[0, -0.45, 0]} color={COLORS.skin} />
+        <Part size={[0.08, 0.1, 0.09]} offset={[0, -0.62, 0.01]} color={COLORS.skin} />
+      </group>
+
+      {/* Cuello y cabeza */}
+      <Part size={[0.1, 0.08, 0.1]} offset={[0, 1.52, 0]} color={COLORS.skin} />
+      <Part size={[0.23, 0.27, 0.24]} offset={[0, 1.68, 0.01]} color={COLORS.skin} />
+
+      {/* Cabello largo hasta los hombros */}
+      <Part size={[0.3, 0.44, 0.08]} offset={[0, 1.6, -0.12]} color={COLORS.hair} />
+      <Part size={[0.05, 0.38, 0.22]} offset={[0.14, 1.62, -0.01]} color={COLORS.hair} />
+      <Part size={[0.05, 0.38, 0.22]} offset={[-0.14, 1.62, -0.01]} color={COLORS.hair} />
+      <Part size={[0.26, 0.05, 0.26]} offset={[0, 1.83, 0]} color={COLORS.hair} />
+      <Part size={[0.08, 0.06, 0.03]} offset={[0.08, 1.77, 0.13]} color={COLORS.hair} />
+
+      {/* Lentes */}
+      <Part size={[0.08, 0.055, 0.015]} offset={[0.055, 1.7, 0.135]} color={COLORS.glasses} />
+      <Part size={[0.08, 0.055, 0.015]} offset={[-0.055, 1.7, 0.135]} color={COLORS.glasses} />
+      <Part size={[0.24, 0.015, 0.015]} offset={[0, 1.72, 0.135]} color={COLORS.glasses} />
+
+      {/* Sombrero tipo fedora */}
+      <mesh position={[0, 1.86, 0]}>
+        <cylinderGeometry args={[0.24, 0.24, 0.025, 10]} />
+        <meshLambertMaterial color={COLORS.hat} onBeforeCompile={ps1VertexSnap} />
+      </mesh>
+      <mesh position={[0, 1.94, 0]}>
+        <cylinderGeometry args={[0.12, 0.15, 0.15, 8]} />
+        <meshLambertMaterial color={COLORS.hat} onBeforeCompile={ps1VertexSnap} />
+      </mesh>
+      <mesh position={[0, 1.895, 0]}>
+        <cylinderGeometry args={[0.152, 0.152, 0.04, 8]} />
+        <meshLambertMaterial color={COLORS.hatBand} onBeforeCompile={ps1VertexSnap} />
+      </mesh>
     </group>
   )
 }
+
+const COLORS = {
+  skin: '#c69a7c',
+  hair: '#151010',
+  hat: '#17181b',
+  hatBand: '#0b0b0c',
+  glasses: '#0a0a0a',
+  shirt: '#1a1b1f',
+  shirtSeam: '#26272c',
+  pants: '#5a5c61',
+  shoes: '#121212',
+} as const
 
 type PartProps = {
   size: [number, number, number]
