@@ -349,6 +349,10 @@ export const ROOMS: Record<RoomId, RoomDef> = {
   rh: { ...placeholder('rh', 11, 'Recursos humanos', { minX: 5, maxX: 11, minZ: 9, maxZ: 13 }), mapLabel: 'RR. HH.' },
 }
 
+function placeholder(id: RoomId, number: number, name: string, rect: Rect): RoomDef {
+  return { id, number, name, rect, built: false, cameras: [], obstacles: [] }
+}
+
 export const ROOM_LIST: RoomDef[] = Object.values(ROOMS).sort((a, b) => a.number - b.number)
 
 /* ----------------------------------- Puertas ----------------------------------- */
