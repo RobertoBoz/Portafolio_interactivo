@@ -1,4 +1,5 @@
 import { Building } from '../components/Building'
+import { DEBUG, DebugStats } from '../components/DebugStats'
 import { CameraRig } from '../components/CameraRig'
 import { CharacterAvatar } from '../components/CharacterAvatar'
 import { FirstPersonCamera } from '../components/FirstPersonCamera'
@@ -25,6 +26,7 @@ export function Office() {
       <ambientLight color="#8b98a8" intensity={firstPerson ? 0.42 : 0.5} />
       <directionalLight position={fill} color="#c9d2cc" intensity={firstPerson ? 0.5 : 0.85} />
 
+      {DEBUG && <DebugStats />}
       <PlayerController />
       {firstPerson ? <FirstPersonCamera /> : <CameraRig />}
       <Building />
