@@ -118,7 +118,7 @@ export function Character() {
       <Part size={[0.1, 0.08, 0.1]} offset={[0, 1.5, 0]} color="#b98d6c" />
       <Part size={[0.26, 0.28, 0.26]} offset={[0, 1.67, 0]} color="#b98d6c" />
       <Part size={[0.28, 0.1, 0.28]} offset={[0, 1.83, -0.01]} color="#1b1512" />
-      <Part size={[0.28, 0.2, 0.06]} offset={[0, 1.72, -0.13]} color="#1b1512" />
+      <Part size={[0.28, 0.3, 0.06]} offset={[0, 1.68, -0.13]} color="#1b1512" />
       {/* Lentes: indican hacia dónde mira el personaje */}
       <Part size={[0.22, 0.05, 0.02]} offset={[0, 1.69, 0.135]} color="#0c0c0c" />
     </group>
