@@ -46,7 +46,8 @@ src/
 │   ├── FluorescentLamp.tsx     # Luz de techo con parpadeo irregular
 │   ├── Door.tsx                # Puerta cerrada + lector de tarjeta
 │   ├── CRTMonitor.tsx          # Monitor con pantalla que brilla
-│   ├── Character.tsx           # Personaje low-poly, movimiento tanque, colisiones
+│   ├── Character.tsx           # Movimiento tanque, colisiones y animación de caminar
+│   ├── CharacterModel.tsx      # Modelo del personaje: polígonos facetados y texturas pintadas
 │   └── ui/                     # Capa HTML: ayuda, indicador [E], diálogos
 ├── scenes/FirstRoom.tsx        # Niebla, luz ambiental y composición de la escena
 ├── store/gameStore.ts          # Zustand: interacción activa y objeto cercano
@@ -57,6 +58,7 @@ src/
 │   ├── interactions.ts         # Detección de monitor/puerta al alcance y de frente
 │   ├── controls.ts             # Mapa de teclas de movimiento
 │   ├── textures.ts             # Texturas de 32 px generadas en canvas (nearest)
+│   ├── lowPoly.ts              # Geometrías y texturas del personaje (cara, camisa, cabello)
 │   └── ps1Material.ts          # Vertex snapping estilo PS1
 └── styles/game.css
 ```
@@ -75,6 +77,7 @@ src/
 
 - **Cámara dentro del cuarto:** la posición sugerida `(6, 5, 8)` queda fuera de las paredes de un cuarto de 10 × 8 m. La cámara está en `(4.5, 2.9, 3.5)`, en la esquina junto al techo, mirando a `(-1, 0.6, -1)`. Así se ve el cuarto completo con perspectiva cinematográfica y la niebla de 4–14 m funciona como se planeó. Todo se ajusta en `src/world/layout.ts`.
 - **Baja resolución:** el canvas se renderiza a unas 360 líneas verticales sin importar el tamaño de la ventana y se escala con `image-rendering: pixelated`. Se usa `flat` (sin tone mapping) para conservar colores planos.
+- **Personaje:** prismas de 5–6 caras, torso hexagonal y cabeza facetada con `flatShading`. La cara (ojos, cejas, lentes) está pintada en una textura de 32 px proyectada de frente, como en los modelos de PS1. Lleva sombrero fedora, cabello largo, camisa negra arremangada y pantalón gris. Una luz de relleno desde la cámara lo mantiene legible en la penumbra.
 - **Toques PS1 extra:** temblor de vértices (*vertex snapping*), animación de caminar cuantizada a pocos fotogramas, sombra circular simple, scanlines y viñeta.
 
 ---
