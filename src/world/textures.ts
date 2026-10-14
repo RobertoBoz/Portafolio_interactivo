@@ -99,3 +99,21 @@ export function createTextTexture(
 function clampByte(value: number): number {
   return Math.max(0, Math.min(255, Math.round(value)))
 }
+
+/**
+ * Textura pintada a mano en un canvas diminuto. `draw` recibe el contexto
+ * y un generador aleatorio determinista.
+ */
+export function createPaintedTexture(
+  size: number,
+  seed: number,
+  draw: (ctx: CanvasRenderingContext2D, random: () => number) => void,
+): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('No se pudo crear el contexto 2D para la textura')
+  draw(ctx, mulberry32(seed))
+  return toPixelTexture(canvas, [1, 1])
+}
