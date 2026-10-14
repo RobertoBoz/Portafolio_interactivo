@@ -2,18 +2,19 @@ import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useKeyboardControls } from '@react-three/drei'
 import * as THREE from 'three'
-import { CHARACTER } from '../world/layout'
+import { CHARACTER } from '../world/building'
 import { resolveMove } from '../world/collision'
 import { findNearbyInteraction } from '../world/interactions'
+import { player } from '../world/player'
 import type { Control } from '../world/controls'
-import { useGameStore } from '../store/gameStore'
+import { isBusy, useGameStore } from '../store/gameStore'
 import { CharacterModel } from './CharacterModel'
 
 /** Qué tan rápido alcanza la velocidad objetivo; bajo = movimiento pesado. */
 const ACCELERATION = 5
 
 /**
- * Personaje low-poly con controles tipo tanque:
+ * Personaje con controles tipo tanque:
  * W/S avanzan y retroceden en la dirección a la que mira, A/D lo giran.
  */
 export function Character() {
@@ -23,50 +24,66 @@ export function Character() {
   const leftArm = useRef<THREE.Group>(null)
   const rightArm = useRef<THREE.Group>(null)
 
-  const position = useRef({ x: CHARACTER.start[0], z: CHARACTER.start[2] })
-  const heading = useRef<number>(CHARACTER.startHeading)
   const speed = useRef(0)
   const walkPhase = useRef(0)
+  const spawnVersion = useRef(-1)
 
   const [, getKeys] = useKeyboardControls<Control>()
 
   useFrame((_, rawDelta) => {
     const delta = Math.min(rawDelta, 0.05)
-    const { isInteracting, nearbyInteraction, setNearbyInteraction } = useGameStore.getState()
-    const keys = getKeys()
+    const state = useGameStore.getState()
+
+    // Aparecer en otro cuarto después de cruzar una puerta.
+    if (state.spawn.version !== spawnVersion.current) {
+      spawnVersion.current = state.spawn.version
+      player.room = state.spawn.room
+      player.x = state.spawn.x
+      player.z = state.spawn.z
+      player.heading = state.spawn.heading
+      speed.current = 0
+    }
 
     let turn = 0
     let move = 0
-    if (!isInteracting) {
+    if (!isBusy(state)) {
+      const keys = getKeys()
       turn = Number(keys.left) - Number(keys.right)
       move = Number(keys.forward) - Number(keys.backward)
     }
 
-    heading.current += turn * CHARACTER.turnSpeed * delta
+    player.heading += turn * CHARACTER.turnSpeed * delta
     const targetSpeed = move > 0 ? CHARACTER.walkSpeed : move < 0 ? -CHARACTER.backSpeed : 0
     speed.current = THREE.MathUtils.damp(speed.current, targetSpeed, ACCELERATION, delta)
     if (Math.abs(speed.current) < 0.01) speed.current = 0
 
     const step = speed.current * delta
     const next = resolveMove(
-      position.current,
-      {
-        x: position.current.x + Math.sin(heading.current) * step,
-        z: position.current.z + Math.cos(heading.current) * step,
-      },
+      player.room,
+      { x: player.x, z: player.z },
+      { x: player.x + Math.sin(player.heading) * step, z: player.z + Math.cos(player.heading) * step },
       CHARACTER.radius,
     )
-    position.current = next
+    player.x = next.x
+    player.z = next.z
 
     if (root.current) {
-      root.current.position.set(next.x, 0, next.z)
-      root.current.rotation.y = heading.current
+      root.current.position.set(player.x, 0, player.z)
+      root.current.rotation.y = player.heading
     }
 
     animateLimbs(delta)
 
-    const nearby = findNearbyInteraction(position.current, heading.current)
-    if (nearby !== nearbyInteraction) setNearbyInteraction(nearby)
+    if (!state.transitioning) {
+      const nearby = findNearbyInteraction(
+        player.room,
+        player,
+        player.heading,
+        (item) => item.action.type === 'pickup' && state.items.includes(item.action.item),
+      )
+      const nearbyId = nearby?.id ?? null
+      if (nearbyId !== state.nearby) state.setNearby(nearbyId)
+    }
   })
 
   /** Animación limitada: piernas y brazos oscilan según la velocidad, como en PS1. */
@@ -83,7 +100,7 @@ export function Character() {
   }
 
   return (
-    <group ref={root} position={CHARACTER.start} rotation-y={CHARACTER.startHeading}>
+    <group ref={root}>
       {/* Sombra simple bajo los pies */}
       <mesh rotation-x={-Math.PI / 2} position={[0, 0.01, 0]}>
         <circleGeometry args={[0.36, 8]} />

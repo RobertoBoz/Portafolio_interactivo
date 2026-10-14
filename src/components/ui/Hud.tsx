@@ -1,19 +1,29 @@
 import { useGameStore } from '../../store/gameStore'
 import { ControlsHint } from './ControlsHint'
-import { DoorMessage } from './DoorMessage'
+import { FadeOverlay } from './FadeOverlay'
 import { InteractionPrompt } from './InteractionPrompt'
-import { MonitorScreen } from './MonitorScreen'
+import { Inventory } from './Inventory'
+import { MapOverlay } from './MapOverlay'
+import { MessageBox } from './MessageBox'
+import { RoomTitle } from './RoomTitle'
+import { TerminalPanel } from './TerminalPanel'
 
-/** Capa HTML sobre el canvas: ayudas, indicador de interacción y diálogos. */
+/** Capa HTML sobre el canvas: ayudas, indicadores, diálogos, terminales y mapa. */
 export function Hud() {
-  const active = useGameStore((state) => state.activeInteraction)
+  const panel = useGameStore((state) => state.panel)
+  const message = useGameStore((state) => state.message)
+  const mapOpen = useGameStore((state) => state.mapOpen)
 
   return (
     <div className="hud">
       <ControlsHint />
+      <RoomTitle />
+      <Inventory />
       <InteractionPrompt />
-      {active === 'monitor' && <MonitorScreen />}
-      {active === 'door' && <DoorMessage />}
+      {message && <MessageBox lines={message} />}
+      {panel && <TerminalPanel id={panel} />}
+      {mapOpen && <MapOverlay />}
+      <FadeOverlay />
     </div>
   )
 }

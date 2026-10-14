@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei'
-import { FirstRoom } from '../scenes/FirstRoom'
+import { Office } from '../scenes/Office'
 import { KEY_MAP } from '../world/controls'
 
 /**
@@ -23,7 +23,7 @@ export function GameCanvas() {
         flat
         gl={{ antialias: false, powerPreference: 'high-performance' }}
       >
-        <FirstRoom />
+        <Office />
       </Canvas>
     </KeyboardControls>
   )

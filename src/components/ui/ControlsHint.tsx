@@ -13,6 +13,9 @@ export function ControlsHint() {
       <li>
         <kbd>E</kbd> interactuar
       </li>
+      <li>
+        <kbd>M</kbd> mapa
+      </li>
     </ul>
   )
 }
