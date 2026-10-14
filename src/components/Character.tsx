@@ -127,15 +127,24 @@ export function Character() {
 
       {/* Cabello largo hasta los hombros */}
       <Part size={[0.3, 0.44, 0.08]} offset={[0, 1.6, -0.12]} color={COLORS.hair} />
-      <Part size={[0.05, 0.38, 0.22]} offset={[0.14, 1.62, -0.01]} color={COLORS.hair} />
-      <Part size={[0.05, 0.38, 0.22]} offset={[-0.14, 1.62, -0.01]} color={COLORS.hair} />
+      <Part size={[0.06, 0.44, 0.22]} offset={[0.145, 1.6, -0.01]} color={COLORS.hair} />
+      <Part size={[0.06, 0.44, 0.22]} offset={[-0.145, 1.6, -0.01]} color={COLORS.hair} />
       <Part size={[0.26, 0.05, 0.26]} offset={[0, 1.83, 0]} color={COLORS.hair} />
       <Part size={[0.08, 0.06, 0.03]} offset={[0.08, 1.77, 0.13]} color={COLORS.hair} />
 
-      {/* Lentes */}
-      <Part size={[0.08, 0.055, 0.015]} offset={[0.055, 1.7, 0.135]} color={COLORS.glasses} />
-      <Part size={[0.08, 0.055, 0.015]} offset={[-0.055, 1.7, 0.135]} color={COLORS.glasses} />
-      <Part size={[0.24, 0.015, 0.015]} offset={[0, 1.72, 0.135]} color={COLORS.glasses} />
+      {/* Ojos */}
+      <Part size={[0.035, 0.022, 0.01]} offset={[0.055, 1.7, 0.131]} color={COLORS.eyes} />
+      <Part size={[0.035, 0.022, 0.01]} offset={[-0.055, 1.7, 0.131]} color={COLORS.eyes} />
+
+      {/* Lentes: armazón delgado */}
+      {[0.055, -0.055].map((x) => (
+        <group key={x} position={[x, 1.7, 0.138]}>
+          <Part size={[0.085, 0.014, 0.012]} offset={[0, 0.028, 0]} color={COLORS.glasses} />
+          <Part size={[0.085, 0.014, 0.012]} offset={[0, -0.028, 0]} color={COLORS.glasses} />
+          <Part size={[0.014, 0.07, 0.012]} offset={[Math.sign(x) * 0.036, 0, 0]} color={COLORS.glasses} />
+          <Part size={[0.014, 0.07, 0.012]} offset={[-Math.sign(x) * 0.036, 0, 0]} color={COLORS.glasses} />
+        </group>
+      ))}
 
       {/* Sombrero tipo fedora */}
       <mesh position={[0, 1.86, 0]}>
@@ -160,6 +169,7 @@ const COLORS = {
   hat: '#1d1e22',
   hatBand: '#0b0b0c',
   glasses: '#0a0a0a',
+  eyes: '#2a1a14',
   shirt: '#1f2025',
   shirtSeam: '#2c2d33',
   pants: '#5a5c61',
