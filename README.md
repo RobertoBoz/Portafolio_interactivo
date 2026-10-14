@@ -1,6 +1,8 @@
-# Portafolio PS1 — Primera escena jugable
+# Portafolio PS1 — Oficina de desarrollo
 
-Portafolio interactivo de Roberto Bolaños inspirado en los survival horror de PlayStation 1: un cuarto abandonado de una empresa tecnológica, cámara fija, controles tipo tanque y un monitor CRT con el primer *developer log*.
+Portafolio interactivo de Roberto Bolaños inspirado en los survival horror de PlayStation 1. Recorres de noche la planta baja de una oficina de desarrollo con cámaras fijas y controles tipo tanque. En cada cuarto hay una sección del portafolio: proyectos, contacto, sobre mí y CV.
+
+![Plano de la planta baja](docs/plano-planta-baja.png)
 
 ## Cómo ejecutarlo
 
@@ -13,14 +15,17 @@ npm run dev
 
 Abre la URL que muestra la terminal (por defecto `http://localhost:5173`).
 
-Otros comandos:
-
 ```bash
 npm run build     # verifica TypeScript y genera dist/
 npm run preview   # sirve el build de producción
 ```
 
-Cada push a `main` se compila con el workflow de `.github/workflows/deploy.yml` y el resultado se publica en la rama `gh-pages`. Para verlo en línea, activa GitHub Pages una sola vez en **Settings → Pages → Build and deployment → Deploy from a branch → `gh-pages` / `(root)`**. Quedará en `https://robertoboz.github.io/Portafolio_interactivo/`.
+Cada push a `main` se compila con `.github/workflows/deploy.yml` y el resultado se publica en la rama `gh-pages`. Para verlo en línea, activa GitHub Pages una sola vez en **Settings → Pages → Build and deployment → Deploy from a branch → `gh-pages` / `(root)`**. Quedará en `https://robertoboz.github.io/Portafolio_interactivo/`.
+
+### Parámetros de URL
+
+- `?sala=desarrollo`: empieza en un cuarto construido (`lobby`, `recepcion`, `desarrollo`, `oficina`). Sirve para compartir un enlace directo a una sección.
+- `?debug`: expone `window.__portafolio` (store y posición del personaje) para pruebas automatizadas.
 
 ## Controles
 
@@ -30,55 +35,75 @@ Cada push a `main` se compila con el workflow de `.github/workflows/deploy.yml` 
 | `S` / `↓` | Retroceder |
 | `A` / `←` | Girar a la izquierda |
 | `D` / `→` | Girar a la derecha |
-| `E` | Interactuar / cerrar |
+| `E` | Interactuar / continuar / cerrar |
+| `M` | Abrir o cerrar el plano |
 | `Esc` | Cerrar la interfaz abierta |
+
+## Qué hay en cada cuarto
+
+| # | Cuarto | Contenido | Estado |
+| --- | --- | --- | --- |
+| 1 | Lobby principal | Terminal con el *Developer Log* y el muro "Build · Ship · Improve" | ✅ |
+| 2 | Recepción | Contacto (correo, GitHub, LinkedIn, portafolio clásico) y la tarjeta de acceso | ✅ |
+| 3 | Oficina privada | Sobre mí, experiencia y expediente con CV descargable. Se abre con la tarjeta | ✅ |
+| 4 | Desarrollo | Un monitor por proyecto: iTeamApp, Kontrolia, GtrackApp, app logística, comunicación interna y plataforma de cursos | ✅ |
+| 5 | Sala de juntas | Liderazgo y prácticas de ingeniería | 🔒 |
+| 6 | Comedor / Descanso | Lado personal | 🔒 |
+| 7 | Sala de servidores | Stack y CI/CD | 🔒 |
+| 8 | Baños | Easter egg | 🔒 |
+| 9 | Almacén | Componentes reutilizables y automatización | 🔒 |
+| 10 | Diseño UX/UI | Identidad visual e ilustración | 🔒 |
+| 11 | Recursos humanos | Educación e idiomas | 🔒 |
+
+Los textos están en `src/content/portfolio.ts` y usan las descripciones ajustadas a la confidencialidad de la empresa.
 
 ## Arquitectura
 
 ```text
 src/
-├── App.tsx                     # Solo compone: canvas + HUD + teclas de interacción
-├── main.tsx
-├── components/
-│   ├── GameCanvas.tsx          # <Canvas> a baja resolución + KeyboardControls
-│   ├── FixedCamera.tsx         # Cámara fija en una esquina
-│   ├── Room.tsx                # Piso, paredes, techo, mesa, archivero, cajas
-│   ├── FluorescentLamp.tsx     # Luz de techo con parpadeo irregular
-│   ├── Door.tsx                # Puerta cerrada + lector de tarjeta
-│   ├── CRTMonitor.tsx          # Monitor con pantalla que brilla
-│   ├── Character.tsx           # Movimiento tanque, colisiones y animación de caminar
-│   ├── CharacterModel.tsx      # Modelo del personaje: polígonos facetados y texturas pintadas
-│   └── ui/                     # Capa HTML: ayuda, indicador [E], diálogos
-├── scenes/FirstRoom.tsx        # Niebla, luz ambiental y composición de la escena
-├── store/gameStore.ts          # Zustand: interacción activa y objeto cercano
-├── hooks/useInteractionKeys.ts # E / Esc abren y cierran interacciones
+├── App.tsx                       # Solo compone: canvas + HUD + teclas
+├── content/portfolio.ts          # Textos de terminales, proyectos y CV
+├── store/gameStore.ts            # Zustand: cuarto actual, inventario, puertas, paneles, mapa, transiciones
+├── hooks/useInteractionKeys.ts   # E, M y Esc
 ├── world/
-│   ├── layout.ts               # Posiciones y medidas de todo el cuarto (fuente única)
-│   ├── collision.ts            # Colisión círculo vs. paredes y cajas (AABB)
-│   ├── interactions.ts         # Detección de monitor/puerta al alcance y de frente
-│   ├── controls.ts             # Mapa de teclas de movimiento
-│   ├── textures.ts             # Texturas de 32 px generadas en canvas (nearest)
-│   ├── lowPoly.ts              # Geometrías y texturas del personaje (cara, camisa, cabello)
-│   └── ps1Material.ts          # Vertex snapping estilo PS1
+│   ├── building.ts               # Cuartos, puertas, cámaras por zona, muebles sólidos (fuente única)
+│   ├── collision.ts              # Colisión círculo vs. muros y muebles del cuarto actual
+│   ├── interactions.ts           # Objetos interactuables y detección "al alcance y de frente"
+│   ├── player.ts                 # Posición del personaje compartida fuera de React
+│   ├── lowPoly.ts                # Geometrías y texturas del personaje
+│   ├── officeTextures.ts         # Losetas, muros, madera, pantallas y letreros (32 px, nearest)
+│   ├── textures.ts / ps1Material.ts
+│   └── controls.ts
+├── scenes/Office.tsx             # Niebla, luces globales, cámara, edificio y personaje
+├── components/
+│   ├── Building.tsx              # Monta los cuartos construidos; solo el actual es visible
+│   ├── CameraRig.tsx             # Corta entre cámaras fijas según la zona del personaje
+│   ├── Character.tsx / CharacterModel.tsx
+│   ├── rooms/                    # RoomShell, DoorPanel, props y un archivo por cuarto
+│   └── ui/                       # Terminal, mensajes, plano, título del cuarto, inventario, fundido
 └── styles/game.css
+public/cv/                        # CV en PDF que se descarga desde el expediente
 ```
 
-- **Flujo de estado:** el personaje calcula cada fotograma qué objeto tiene al alcance y lo escribe en el store (`nearbyInteraction`). El hook `useInteractionKeys` lee el store al presionar `E` y abre o cierra `activeInteraction`. Mientras `isInteracting` es `true`, el personaje ignora el movimiento.
-- **Colisiones:** el personaje es un círculo de 0.32 m. Cada eje se resuelve por separado para que se deslice por las paredes en lugar de quedarse atorado.
-- **Sin modelos externos:** todo se construye con geometrías de three.js. Las texturas se generan en tiempo de ejecución, así que la carpeta `public/` no necesita assets todavía.
+- **Coordenadas:** el plano usa metros, con X hacia el este y Z hacia la entrada (sur). Cada cuarto es un rectángulo; las puertas viven en los muros compartidos.
+- **Puertas:** al usar una puerta la pantalla funde a negro, el personaje aparece del otro lado mirando hacia dentro y se muestra el nombre del cuarto.
+- **Cámaras:** cada cuarto tiene una o más zonas. El lobby tiene dos y la cámara corta de golpe al cruzar de una a otra. La cámara de cada cuarto está en la esquina opuesta a su puerta para que el personaje se vea al entrar.
+- **Rendimiento:** solo el cuarto actual es visible, así que solo sus luces cuentan.
+- **Para construir un cuarto nuevo:** márcalo `built: true` en `building.ts` con sus cámaras y obstáculos, cambia el `lock` de su puerta a `'none'`, crea su componente en `components/rooms/` y regístralo en `Building.tsx`.
 
-### Por qué cada librería
+### Personaje
+
+Prismas de 5–6 caras, torso hexagonal y cabeza facetada con `flatShading`. La cara (ojos, cejas, lentes) está pintada en una textura de 32 px proyectada de frente, como en los modelos de PS1. Lleva sombrero fedora, cabello largo, camisa negra arremangada y pantalón gris.
+
+### Estética
+
+Render a unas 360 líneas escalado con `image-rendering: pixelated`, sin antialiasing ni tone mapping, *vertex snapping*, texturas diminutas, niebla, plafones que parpadean, scanlines y viñeta. Cada cuarto tiene una luz de relleno desde su cámara para que el personaje se lea en la penumbra.
+
+### Librerías
 
 - **three / @react-three/fiber:** render 3D declarativo con React.
-- **@react-three/drei:** `PerspectiveCamera` (cámara por defecto con `makeDefault`) y `KeyboardControls` (estado del teclado sin listeners manuales).
-- **zustand:** estado compartido entre el canvas 3D y la interfaz HTML sin re-renderizar la escena.
-
-### Decisiones respecto a la especificación
-
-- **Cámara dentro del cuarto:** la posición sugerida `(6, 5, 8)` queda fuera de las paredes de un cuarto de 10 × 8 m. La cámara está en `(4.5, 2.9, 3.5)`, en la esquina junto al techo, mirando a `(-1, 0.6, -1)`. Así se ve el cuarto completo con perspectiva cinematográfica y la niebla de 4–14 m funciona como se planeó. Todo se ajusta en `src/world/layout.ts`.
-- **Baja resolución:** el canvas se renderiza a unas 360 líneas verticales sin importar el tamaño de la ventana y se escala con `image-rendering: pixelated`. Se usa `flat` (sin tone mapping) para conservar colores planos.
-- **Personaje:** prismas de 5–6 caras, torso hexagonal y cabeza facetada con `flatShading`. La cara (ojos, cejas, lentes) está pintada en una textura de 32 px proyectada de frente, como en los modelos de PS1. Lleva sombrero fedora, cabello largo, camisa negra arremangada y pantalón gris. Una luz de relleno desde la cámara lo mantiene legible en la penumbra.
-- **Toques PS1 extra:** temblor de vértices (*vertex snapping*), animación de caminar cuantizada a pocos fotogramas, sombra circular simple, scanlines y viñeta.
+- **@react-three/drei:** `PerspectiveCamera` y `KeyboardControls`.
+- **zustand:** estado compartido entre la escena 3D y la interfaz HTML.
 
 ---
 
